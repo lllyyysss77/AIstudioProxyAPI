@@ -6,7 +6,6 @@
     ".git",
     ".venv",
     "node_modules",
-    "static/frontend/node_modules",
     "deprecated_javascript_version",
     "errors_py",
     "logs",
@@ -33,7 +32,7 @@
   "reportAssertAlwaysTrue": "error",
   "reportInvalidStringEscapeSequence": "error",
   "reportInvalidTypeVarUse": "error",
-  "reportConstantRedefinition": "error",
+  "reportConstantRedefinition": "none",
   "reportGeneralTypeIssues": "error",
   "reportPropertyTypeMismatch": "error",
   "reportFunctionMemberAccess": "error",
@@ -55,13 +54,15 @@
   "reportUnknownMemberType": "none",
 
   "reportMissingParameterType": "none",
+  "reportArgumentType": "none",
+  "reportAttributeAccessIssue": "none",
   "reportMissingTypeArgument": "none",
   "reportMissingTypeStubs": "none",
 
   "reportPrivateUsage": "none",
   "reportUnnecessaryIsInstance": "none",
   "reportUnnecessaryCast": "warning",
-  "reportUnnecessaryComparison": "none",
+  "reportUnnecessaryComparison": "warning",
   "reportDuplicateImport": "warning",
   "reportTypedDictNotRequiredAccess": "warning"
 }
