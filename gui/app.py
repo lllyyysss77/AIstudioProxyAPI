@@ -1459,7 +1459,7 @@ class GUILauncher:
 {get_text("about_credits")}
 • @CJackHwang - Original author
 • @beng1z - GUI Launcher
-• @MasuRii - English fork maintainer
+• Downstream contributors - Feature and stability improvements
 • Linux.do Community
 
 GitHub: {GITHUB_URL}

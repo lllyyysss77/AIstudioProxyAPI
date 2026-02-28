@@ -111,7 +111,7 @@ DIMENSIONS = {
 # =============================================================================
 # URLs
 # =============================================================================
-GITHUB_URL = "https://github.com/MasuRii/AIstudioProxyAPI-EN"
+GITHUB_URL = "https://github.com/CJackHwang/AIstudioProxyAPI"
 DOCS_URL = f"{GITHUB_URL}#readme"
 
 # =============================================================================

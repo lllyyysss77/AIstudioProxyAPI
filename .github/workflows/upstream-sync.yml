@@ -1,19 +1,15 @@
 # =============================================================================
 # Upstream Sync Workflow
 # =============================================================================
-# Automatically syncs this fork with the upstream repository.
+# Automatically syncs this repository with the upstream repository.
 # Creates a PR when new changes are detected from upstream.
 #
-# Fork: MasuRii/AIstudioProxyAPI-EN (main)
-# Upstream: CJackHwang/AIstudioProxyAPI (main)
+# Local repository: current default branch (main)
+# Upstream source: CJackHwang/AIstudioProxyAPI (main)
 #
 # CONFLICT HANDLING:
-# This is an English translation fork of a Chinese upstream. The README.md
-# will ALWAYS conflict because:
-#   - Fork: English README (intentional localization)
-#   - Upstream: Chinese README
-#
-# The workflow auto-resolves README.md conflicts by keeping the fork's version.
+# README.md can conflict when this repository keeps custom docs/content.
+# The workflow auto-resolves README.md conflicts by keeping local version.
 # Other conflicts will fail the workflow and require manual intervention.
 # =============================================================================
 
@@ -41,7 +37,7 @@ concurrency:
 
 jobs:
   sync:
-    name: Sync Fork with Upstream
+    name: Sync Repository with Upstream
     runs-on: ubuntu-latest
 
     # Required permissions for creating PRs and pushing branches
@@ -51,9 +47,9 @@ jobs:
 
     steps:
       # -----------------------------------------------------------------------
-      # Step 1: Checkout the fork repository
+      # Step 1: Checkout current repository
       # -----------------------------------------------------------------------
-      - name: Checkout Fork Repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           # Fetch all history to properly compare with upstream
