@@ -147,6 +147,7 @@ cp .env.example .env
 
 - [文档总览](docs/README.md)
 - [快速开始](docs/quick-start.md)
+- [部署与运维指南](docs/deployment-and-operations.md)
 - [API 使用说明](docs/api-usage.md)
 - [函数调用模式](docs/function-calling.md)
 - [认证轮转与 Cookie 刷新](docs/auth-rotation-cookie-refresh.md)
