@@ -1,31 +1,34 @@
 # AI Studio Proxy API
 
-将 Google AI Studio 网页能力封装为 OpenAI 兼容 API 的代理服务。
+将 Google AI Studio 网页界面转换为 OpenAI 兼容 API 的代理服务。通过 Camoufox + Playwright 自动化，提供稳定可控的 API 访问。
 
-项目通过 `Camoufox + Playwright` 驱动 AI Studio 页面，提供 `/v1/chat/completions`、`/v1/models` 等接口，并包含 Web UI、GUI 启动器、认证轮转、Cookie 刷新、函数调用（Native/Emulated）等能力。
+[![Star History Chart](https://api.star-history.com/svg?repos=CJackHwang/AIstudioProxyAPI&type=Date)](https://www.star-history.com/#CJackHwang/AIstudioProxyAPI&Date)
 
-## 核心特性
+---
 
-- OpenAI 兼容接口：支持流式/非流式对话。
-- 函数调用三模式：`auto` / `native` / `emulated`，支持失败回退。
-- 认证体系增强：支持 profile 轮转、启动时自动选取、配额阈值策略。
-- Cookie 生命周期维护：周期刷新、请求后保存、退出前保存。
-- 启动链路完整：CLI 启动器、内置 Web UI、桌面 GUI 启动器。
-- CI/CD 工作流：PR 检查、Release、上游同步流程。
+## 主要特性
 
-## 目录概览
+- **OpenAI 兼容 API**：支持 `/v1/chat/completions`、`/v1/models`
+- **函数调用三模式**：`auto` / `native` / `emulated`，支持失败回退
+- **认证轮转与 Cookie 刷新**：支持 profile 自动轮转、周期刷新与关停保存
+- **启动链路完整**：CLI 启动器、内置 Web UI、桌面 GUI 启动器
+- **现代化前端**：内置设置页、状态检查与日志能力
+- **CI/CD 工作流**：PR 检查、Release、Upstream Sync
 
-- `api_utils/`：FastAPI 应用、路由、请求处理与响应生成。
-- `browser_utils/`：页面初始化、交互、模型切换、函数调用 UI 自动化。
-- `config/`：配置读取、默认值、选择器、超时与全局状态。
-- `gui/`：桌面启动器与设置面板。
-- `stream/`：流式代理服务。
-- `static/frontend/`：React 前端。
-- `tests/`：后端/浏览器/流式/GUI/工作流测试。
+## 系统要求
 
-## 快速开始
+| 组件 | 要求 | 推荐 |
+| --- | --- | --- |
+| Python | >=3.9, <4.0 | 3.10+ / 3.11+ |
+| 依赖管理 | Poetry | 最新版本 |
+| Node.js | 前端构建需要 | LTS |
+| 内存 | >=2GB | >=4GB |
 
-### 1. 克隆与安装
+---
+
+## 🚀 快速开始
+
+### 1. 克隆并安装
 
 ```bash
 git clone https://github.com/CJackHwang/AIstudioProxyAPI.git
@@ -33,31 +36,25 @@ cd AIstudioProxyAPI
 poetry install --with dev
 ```
 
-### 2. 配置环境变量
+### 2. 配置环境
 
 ```bash
 cp .env.example .env
 ```
 
-建议最少确认以下项：
+建议先确认：`PORT`、`STREAM_PORT`、`UNIFIED_PROXY_CONFIG`、`LAUNCH_MODE`、`FUNCTION_CALLING_MODE`。
 
-- `PORT`、`STREAM_PORT`
-- `UNIFIED_PROXY_CONFIG`（需要代理时）
-- `LAUNCH_MODE`
-- `AUTO_SAVE_AUTH`、`AUTO_ROTATE_AUTH_PROFILE`
-- `FUNCTION_CALLING_MODE`
-
-### 3. 首次认证与启动
+### 3. 首次认证并启动
 
 ```bash
-# 首次建议 debug 模式，完成登录并保存 auth
+# 首次建议 debug，完成登录并保存 auth
 poetry run python launch_camoufox.py --debug
 
-# 日常服务建议 headless
+# 日常建议 headless
 poetry run python launch_camoufox.py --headless
 ```
 
-## 常用验证
+### 快速测试
 
 ```bash
 # 健康检查
@@ -66,28 +63,108 @@ curl http://127.0.0.1:2048/health
 # 模型列表
 curl http://127.0.0.1:2048/v1/models
 
-# 非流式对话
+# 聊天请求
 curl -X POST http://127.0.0.1:2048/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{"model":"gemini-2.5-pro","messages":[{"role":"user","content":"你好"}]}'
-
-# 流式对话
-curl -X POST http://127.0.0.1:2048/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{"model":"gemini-2.5-pro","stream":true,"messages":[{"role":"user","content":"写一个三行小诗"}]}' --no-buffer
 ```
 
-## 文档导航
+访问 `http://127.0.0.1:2048/` 使用内置 Web UI。
+
+---
+
+## 系统架构
+
+```mermaid
+graph TD
+    subgraph "用户端"
+        User["用户"]
+        WebUI["Web UI"]
+        APIClient["API 客户端"]
+    end
+
+    subgraph "启动与配置"
+        Launcher["launch_camoufox.py"]
+        Env[".env 配置"]
+    end
+
+    subgraph "核心服务"
+        FastAPI["FastAPI 应用<br/>api_utils/"]
+        BrowserOps["页面控制与自动化<br/>browser_utils/"]
+        StreamProxy["流式代理<br/>stream/"]
+    end
+
+    subgraph "外部依赖"
+        Camoufox["Camoufox 浏览器"]
+        AIStudio["Google AI Studio"]
+    end
+
+    User --> Launcher
+    Launcher --> Env
+    WebUI --> FastAPI
+    APIClient --> FastAPI
+    FastAPI --> BrowserOps
+    FastAPI --> StreamProxy
+    BrowserOps --> Camoufox --> AIStudio
+    StreamProxy --> AIStudio
+```
+
+---
+
+## 运行模式
+
+| 命令 | 说明 | 场景 |
+| --- | --- | --- |
+| `python launch_camoufox.py --headless` | 无头模式 | 日常使用、服务器 |
+| `python launch_camoufox.py --debug` | 调试模式 | 首次认证、故障排查 |
+| `python launch_camoufox.py --virtual-display` | 虚拟显示 | Linux 无 GUI 环境 |
+
+---
+
+## ⚙️ 配置
+
+项目使用 `.env` 统一配置管理：
+
+```bash
+cp .env.example .env
+```
+
+核心配置示例：
+
+| 配置 | 默认值 | 说明 |
+| --- | --- | --- |
+| `PORT` | `2048` | 主 API 端口 |
+| `STREAM_PORT` | `3120` | 流式代理端口（`0` 关闭） |
+| `UNIFIED_PROXY_CONFIG` | 空 | HTTP/HTTPS 代理 |
+| `AUTO_ROTATE_AUTH_PROFILE` | `true` | 认证自动轮转 |
+| `FUNCTION_CALLING_MODE` | `auto` | 函数调用模式 |
+
+详细项见：[配置参考](docs/configuration-reference.md)
+
+---
+
+## 📚 文档
 
 - [文档总览](docs/README.md)
 - [快速开始](docs/quick-start.md)
-- [配置参考](docs/configuration-reference.md)
-- [认证轮转与 Cookie 刷新](docs/auth-rotation-cookie-refresh.md)
-- [函数调用模式](docs/function-calling.md)
 - [API 使用说明](docs/api-usage.md)
+- [函数调用模式](docs/function-calling.md)
+- [认证轮转与 Cookie 刷新](docs/auth-rotation-cookie-refresh.md)
 - [排障指南](docs/troubleshooting.md)
 - [开发、测试与发布](docs/development-and-release.md)
-- [旧文档迁移说明](docs/migration-notes.md)
+
+---
+
+## 客户端配置示例
+
+以 Open WebUI 为例：
+
+1. 进入设置 -> 连接
+2. API Base URL 填 `http://127.0.0.1:2048/v1`
+3. API Key 留空或任意字符
+4. 保存后即可对话
+
+---
 
 ## 开发检查
 
@@ -97,7 +174,7 @@ poetry run pyright
 poetry run pytest
 ```
 
-前端（可选）:
+前端构建：
 
 ```bash
 cd static/frontend
@@ -105,15 +182,19 @@ npm ci
 npm run build
 ```
 
-## 版本与发布
-
-本仓库当前维持自有版本线（示例：`0.1.0`）。
-
-- 稳定版发布：推送 tag，如 `v0.1.0`
-- Nightly 发布：`main` 分支 push 自动触发
-- 上游同步：使用 `Sync with Upstream` 工作流
+---
 
 ## 致谢
 
-- 原始项目与主线实现：[@CJackHwang](https://github.com/CJackHwang)
-- 历史改进贡献者与社区反馈：Linux.do 社区及各位贡献者
+- 项目发起与主线实现：[@CJackHwang](https://github.com/CJackHwang)
+- 社区贡献与反馈：Linux.do 社区及各位贡献者
+
+## License
+
+[AGPLv3](LICENSE)
+
+## 支持作者
+
+如果本项目对你有帮助，欢迎支持作者持续开发：
+
+![支持作者](./支持作者.jpg)
