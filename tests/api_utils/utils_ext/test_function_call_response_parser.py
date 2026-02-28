@@ -169,7 +169,7 @@ class TestFunctionCallResponseParser:
 
         This handles the case where AI Studio's DOM renders multiple chunks for
         a single function call, where one chunk may be missing arguments.
-        See: https://github.com/MasuRii/AIstudioProxyAPI-EN/issues/XXX
+        Related to historical downstream render behavior in AI Studio chunks.
         """
         calls = [
             ParsedFunctionCall(name="read", arguments={"filePath": "/path/to/file"}),
