@@ -141,12 +141,15 @@ cp .env.example .env
 
 详细项见：[配置参考](docs/configuration-reference.md)
 
+> 说明：配置默认值以 `.env.example` 为准；少数配置存在代码兜底默认值，详见配置参考中的说明。
+
 ---
 
 ## 📚 文档
 
 - [文档总览](docs/README.md)
 - [快速开始](docs/quick-start.md)
+- [部署与运维指南](docs/deployment-and-operations.md)
 - [API 使用说明](docs/api-usage.md)
 - [函数调用模式](docs/function-calling.md)
 - [认证轮转与 Cookie 刷新](docs/auth-rotation-cookie-refresh.md)
@@ -161,7 +164,7 @@ cp .env.example .env
 
 1. 进入设置 -> 连接
 2. API Base URL 填 `http://127.0.0.1:2048/v1`
-3. API Key 留空或任意字符
+3. 若你未配置 API Keys，可留空或填任意字符；若已配置，请填写有效 Key
 4. 保存后即可对话
 
 ---
