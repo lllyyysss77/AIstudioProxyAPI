@@ -82,6 +82,27 @@ def determine_proxy_configuration(
 
 
 def parse_args() -> argparse.Namespace:
+    # Resolve defaults at call time to avoid module-import-time env pinning
+    # (e.g., test sessions that override STREAM_PORT globally).
+    runtime_default_server_port = int(
+        os.environ.get("DEFAULT_FASTAPI_PORT", str(DEFAULT_SERVER_PORT))
+    )
+    runtime_default_stream_port = int(
+        os.environ.get("STREAM_PORT", str(DEFAULT_STREAM_PORT))
+    )
+    runtime_default_camoufox_port = int(
+        os.environ.get("DEFAULT_CAMOUFOX_PORT", str(DEFAULT_CAMOUFOX_PORT))
+    )
+    runtime_default_helper_endpoint = os.environ.get(
+        "GUI_DEFAULT_HELPER_ENDPOINT", DEFAULT_HELPER_ENDPOINT
+    )
+    runtime_default_auth_save_timeout = int(
+        os.environ.get("AUTH_SAVE_TIMEOUT", str(DEFAULT_AUTH_SAVE_TIMEOUT))
+    )
+    runtime_default_server_log_level = os.environ.get(
+        "SERVER_LOG_LEVEL", DEFAULT_SERVER_LOG_LEVEL
+    )
+
     parser = argparse.ArgumentParser(
         description="Launcher for Camoufox browser simulation and FastAPI proxy server.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -99,7 +120,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--internal-camoufox-port",
         type=int,
-        default=DEFAULT_CAMOUFOX_PORT,
+        default=runtime_default_camoufox_port,
         help=argparse.SUPPRESS,
     )
     parser.add_argument(
@@ -113,26 +134,26 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--server-port",
         type=int,
-        default=DEFAULT_SERVER_PORT,
-        help=f"FastAPI server listening port (Default: {DEFAULT_SERVER_PORT})",
+        default=runtime_default_server_port,
+        help=f"FastAPI server listening port (Default: {runtime_default_server_port})",
     )
     parser.add_argument(
         "--stream-port",
         type=int,
-        default=DEFAULT_STREAM_PORT,
-        help=f"Streaming proxy server port. Provide 0 to disable. Default: {DEFAULT_STREAM_PORT}",
+        default=runtime_default_stream_port,
+        help=f"Streaming proxy server port. Provide 0 to disable. Default: {runtime_default_stream_port}",
     )
     parser.add_argument(
         "--helper",
         type=str,
-        default=DEFAULT_HELPER_ENDPOINT,
-        help=f"Helper server getStreamResponse endpoint. Provide empty string to disable. Default: {DEFAULT_HELPER_ENDPOINT}",
+        default=runtime_default_helper_endpoint,
+        help=f"Helper server getStreamResponse endpoint. Provide empty string to disable. Default: {runtime_default_helper_endpoint}",
     )
     parser.add_argument(
         "--camoufox-debug-port",
         type=int,
-        default=DEFAULT_CAMOUFOX_PORT,
-        help=f"Internal Camoufox instance debugging port (Default: {DEFAULT_CAMOUFOX_PORT})",
+        default=runtime_default_camoufox_port,
+        help=f"Internal Camoufox instance debugging port (Default: {runtime_default_camoufox_port})",
     )
 
     mode_selection_group = parser.add_mutually_exclusive_group()
@@ -177,8 +198,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--auth-save-timeout",
         type=int,
-        default=DEFAULT_AUTH_SAVE_TIMEOUT,
-        help=f"[Debug Mode] Timeout in seconds to wait for auth save. Default: {DEFAULT_AUTH_SAVE_TIMEOUT}",
+        default=runtime_default_auth_save_timeout,
+        help=f"[Debug Mode] Timeout in seconds to wait for auth save. Default: {runtime_default_auth_save_timeout}",
     )
     parser.add_argument(
         "--exit-on-auth-save",
@@ -189,9 +210,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--server-log-level",
         type=str,
-        default=DEFAULT_SERVER_LOG_LEVEL,
+        default=runtime_default_server_log_level,
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
-        help=f"Log level for server.py. Default: {DEFAULT_SERVER_LOG_LEVEL}",
+        help=f"Log level for server.py. Default: {runtime_default_server_log_level}",
     )
     parser.add_argument(
         "--server-redirect-print",
