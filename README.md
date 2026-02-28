@@ -186,8 +186,13 @@ npm run build
 
 ## 致谢
 
-- 项目发起与主线实现：[@CJackHwang](https://github.com/CJackHwang)
-- 社区贡献与反馈：Linux.do 社区及各位贡献者
+- **项目发起与主要开发**: [@CJackHwang](https://github.com/CJackHwang)
+- **核心维护**（架构重构、测试体系）: [@NikkeTryHard](https://github.com/NikkeTryHard)
+- **功能完善、页面操作优化**: [@ayuayue](https://github.com/ayuayue)
+- **实时流式功能优化**: [@luispater](https://github.com/luispater)
+- **项目重构贡献**: [@yattin](https://github.com/yattin)（Holt）
+- **下游维护分支致谢作者**: [@MasuRii](https://github.com/MasuRii)
+- **社区支持**: [Linux.do 社区](https://linux.do/)
 
 ## License
 
